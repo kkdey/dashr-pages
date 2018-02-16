@@ -1,5 +1,2 @@
 # dashr-pages
-
-A [workflowr][] project.
-
-[workflowr]: https://github.com/jdblischak/workflowr
+A repository containing the analysis related to Dirichlet Adaptive Shrinkage (dash)
