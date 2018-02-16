@@ -1,0 +1,169 @@
+---
+title: "dashr-smooth on example ChiP-seq data"
+author: "Kushal K Dey, Kevin Luo"
+date: "2/16/2018"
+output: html_document
+---
+
+We applied **dashr** on example ChiP-Seq data (provided by Kevin Luo) - for different histone marks and transcription
+factor binding examples.
+
+```{r message = FALSE, warning = FALSE}
+library(plotly)
+library(RColorBrewer)
+library(dashr)
+```
+
+## H3K4me3 example 
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K4me3_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K4me3_chip.example_region1.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+
+
+## H3K4me2 example 
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K4me2_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K4me2_chip.example_region1.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+
+## H3K4me1 example 
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K4me1_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K4me1_chip.example_region1.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+
+
+## H3K27ac example 
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K27ac_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K27ac_chip.example_region1.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+## H3K36me3 example
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K36me3_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K36me3_chip.example_region1.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+
+## H3K27me3 example 
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K27me3_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K27me3_chip.example_region1.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+
+## CTCF example 
+
+```{r}
+data1 <- read.table("../data/example_region1/CTCF_chip.example_region1.coverage")
+data2 <- get(load("../output/CTCF_chip.example_region1.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```

@@ -1,15 +1,10 @@
 ---
-title: "Home"
+title: "dashr : Dirichlet Adaptive shrinkage using R"
 output:
   html_document:
     toc: false
 ---
 
-The goal of this new template is to simplify the setup and maintenance of a research website.
-Specifically,
+We consider examples of smoothing using Beta adaptive shrinkage. 
 
-*  Easier to build and extend the website using the new tools in the [rmarkdown][] package and [latest RStudio release][rstudio]
-*  Easier to deploy the website with Git and GitHub by only using one branch
-
-[rmarkdown]: http://rmarkdown.rstudio.com/rmarkdown_websites.htm
-[rstudio]: https://www.rstudio.com/products/rstudio/download/preview/
+[Chip-Seq reads data analysis : Beta adaptive shrinkage](dashr_chip.html)
