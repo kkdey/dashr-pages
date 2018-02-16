@@ -1,0 +1,89 @@
+---
+title: "dashr-smooth for different null weights"
+author: "Kushal K Dey, Kevin Luo"
+date: "2/16/2018"
+output: html_document
+---
+
+
+
+```{r message = FALSE, warning = FALSE}
+library(plotly)
+library(RColorBrewer)
+library(dashr)
+```
+
+
+## H3K4me3 - part 4 example 
+
+null weight : 10^12
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K4me3_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K4me3_chip.example_region1_part4.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+
+## H3K4me3 - part 2 example 
+
+null weight : 1
+
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K4me3_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K4me3_chip.example_region1_part2.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+
+## H3K4me3 - part 3 example 
+
+null weight : 10^7
+
+
+```{r}
+data1 <- read.table("../data/example_region1/H3K4me3_chip.example_region1.coverage")
+data2 <- get(load("../output/H3K4me3_chip.example_region1_part3.rda"))
+```
+
+```{r}
+table <- data.frame("index" = 1:50000, 
+                    "before_smooth" =  data1[,5],
+                    "after_smooth" = data2$estimate)
+```
+
+```{r}
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+

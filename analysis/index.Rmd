@@ -8,3 +8,5 @@ output:
 We consider examples of smoothing using Beta adaptive shrinkage. 
 
 [Chip-Seq reads data analysis : Beta adaptive shrinkage](dashr_chip.html)
+
+[Different null weights in dash impact on smoothing](dashr_smooth_null.html)
