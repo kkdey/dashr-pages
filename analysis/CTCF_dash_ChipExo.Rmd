@@ -51,7 +51,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "EncodeBroadHistoneHelas - Rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -70,7 +70,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 reverse", xlab = "", main = "EncodeBroadHistoneHelas - Rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -91,7 +91,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep2 forward", xlab = "", main = "EncodeBroadHistoneHelas - Rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -110,7 +110,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep2 reverse", xlab = "", main = "EncodeBroadHistoneHelas - Rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -133,7 +133,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "EncodeOpenChromChipHelas - Rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -152,7 +152,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 reverse", xlab = "", main = "EncodeOpenChromChipHelas - Rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -173,7 +173,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep2 forward", xlab = "", main = "EncodeOpenChromChipHelas - Rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -192,7 +192,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEn
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep2 reverse", xlab = "", main = "EncodeOpenChromChipHelas - Rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place

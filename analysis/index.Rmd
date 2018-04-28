@@ -10,6 +10,7 @@ We consider examples of smoothing using Beta adaptive shrinkage.
 * **CTCF Chip-Exo and Chip-seq data smoothing**
       + [*CTCF Chip-exo data*](CTCF_dash_ChipExo.html)
       + [*CTCF Chip-seq data*](CTCF_dash_ChipSeq.html)
+      + [*Results from CTCF applying dash with stronger priors*](dash_shrinkage_levels.html)
 
 
 

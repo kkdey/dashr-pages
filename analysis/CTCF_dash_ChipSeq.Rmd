@@ -51,7 +51,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep1_
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "forward strand", xlab = "", main = "CTCF raw rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -70,7 +70,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep1_
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "reverse strand", xlab = "", main = "CTCF raw rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -91,7 +91,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep2_
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "forward strand", xlab = "", main = "CTCF raw rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -110,7 +110,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep2_
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "reverse strand", xlab = "", main = "CTCF raw rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -132,7 +132,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep3_
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "forward strand", xlab = "", main = "CTCF raw rep 3")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -151,7 +151,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep3_
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "reverse strand", xlab = "", main = "CTCF raw rep 3")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -174,7 +174,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_rep1_forw
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "forward strand", xlab = "", main = "CTCF rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -193,7 +193,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_rep1_reve
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "reverse strand", xlab = "", main = "CTCF rep 1")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -214,7 +214,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_rep2_forw
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "forward strand", xlab = "", main = "CTCF rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -233,7 +233,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_rep2_reve
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "reverse strand", xlab = "", main = "CTCF rep 2")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -255,7 +255,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_rep3_forw
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1), progressbar = FALSE)
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "forward strand", xlab = "", main = "CTCF rep 3")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
@@ -274,7 +274,7 @@ chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_rep3_reve
 out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
 out2 <- smashr::smash.poiss(chipexo1$counts)
 
-plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "reverse strand", xlab = "", main = "CTCF rep 3")
 lines(out2, col = "blue", lwd = 2)
 lines(out$estimate, col = "red", lwd = 4)
 legend("topright", # places a legend at the appropriate place
