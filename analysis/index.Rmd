@@ -7,6 +7,13 @@ output:
 
 We consider examples of smoothing using Beta adaptive shrinkage. 
 
-[Chip-Seq reads data analysis : Beta adaptive shrinkage](dashr_chip.html)
+* **CTCF Chip-Exo and Chip-seq data smoothing**
+      + [*CTCF Chip-exo data*](CTCF_dash_ChipExo.html)
+      + [*CTCF Chip-seq data*](CTCF_dash_ChipSeq.html)
 
+
+
+### Other examples
+
+[Chip-Seq reads data analysis : Beta adaptive shrinkage](dashr_chip.html)
 [Different null weights in dash impact on smoothing](dashr_smooth_null.html)

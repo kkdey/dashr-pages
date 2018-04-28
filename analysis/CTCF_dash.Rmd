@@ -1,0 +1,219 @@
+---
+title: "dash-smooth and smash-poisson on CTCF ChipExo data"
+author: "Kushal K Dey"
+date: "4/28/2018"
+output: html_document
+---
+
+## Introduction
+
+We apply the `dashr-smooth` function on example CTCF Chip-Exo and Chip-seq data, collected by Kevin Luo,
+the data are stored under `/project/mstephens/data_smoothing/chipseq/examples` and `/project/mstephens/data_smoothing/chipexo/examples` on Midway cluster. Originally these data have been
+downloaded from Pugh et al 2011, Cell, paper. 
+
+We saved some of these example data files under the `data` folder and ran the `dash` and `smash` smoothing 
+functions on these data.
+
+```{r}
+library(dashr)
+library(smashr)
+```
+
+
+## Chip-Exo CTCF
+
+```{r}
+chipexo_files <- list.files("../data/chipexo_examples/")
+chipexo_files
+```
+
+## Processing
+
+```{r}
+extract_counts_CTCF <- function(filename){
+  bed_counts <- read.table(filename, header = F, stringsAsFactors = F)
+  colnames(bed_counts) <- c("chr", "start", "end", "name", "width", "counts")
+
+  counts <- strsplit(bed_counts$counts, split = ",")[[1]]
+  counts[counts == "NA"] <- 0
+  counts <- as.numeric(counts)
+
+  return(counts.l = list(chr = bed_counts$chr, start = bed_counts$start, end = bed_counts$end, counts = counts))
+}
+```
+
+## EncodeBroadHistoneHelas - Rep 1
+
+### Forward
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep1_forward_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+### Reverse
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep1_reverse_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+## EncodeBroadHistoneHelas - Rep 2
+
+### Forward
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep1_forward_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+### Reverse
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep1_reverse_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+
+
+## EncodeOpenChromChipHelas - Rep 1
+
+### Forward
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep1_forward_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+### Reverse
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep1_reverse_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+## EncodeOpenChromChipHelas - Rep 2
+
+### Forward
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep2_forward_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+### Reverse
+
+```{r message=FALSE, warning=FALSE, results=`hide`}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep2_reverse_counts.txt")
+out <- dashr::dash_smooth(chipexo1$counts, dash_control = list(Inf_weight = 1))
+out2 <- smashr::smash.poiss(chipexo1$counts)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "CTCF-rep1-forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+## Observations
+
+A common observation in all cases is that the dash smoothing is smoother compared to the Poisson SMASH smoothing.
+One reason could be that may be taking the logit transformation of the proportional message flow in the Polya tree 
+in the SMASH model does not take care of the binomial noise appropriately and causes less smoothing. 
+
+## SessionInfo
+
+```{r}
+sessionInfo()
+```
+
+
