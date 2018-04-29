@@ -1,0 +1,72 @@
+---
+title: 'bash, dash and smash poisson : performance validation'
+author: "Kushal K Dey"
+date: "4/29/2018"
+output: html_document
+---
+
+In this script, we check if Tom's implementation of `bash` function gives 
+similar results as Kushal's `dash` implementation (difference could mainly
+highlight the choice of mixture components plays a major role in determining
+shrinkage). 
+
+```{r warning=FALSE, message=FALSE}
+library(dashr)
+library(smashr)
+source("../code/binshrink.R")
+```
+## Constant high signal interspersed with 0s
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+y <- rep(3, 300)
+ids <- sample(1:300, 100, replace = FALSE)
+y[ids] <- 0
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+bash_out <- binshrink(y)
+
+plot(y, col = "gray80", type = "h")
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+lines(bash_out$est, col = "green", lwd = 2)
+
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash", "bash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue", "green"))
+```
+
+
+## Constant high signal interspersed with 1s
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+y <- rep(3, 300)
+ids <- sample(1:300, 100, replace = FALSE)
+y[ids] <- 1
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+bash_out <- binshrink(y)
+
+plot(y, col = "gray80", type = "h")
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+lines(bash_out$est, col = "green", lwd = 2)
+
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash", "bash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue", "green"))
+```
+
+## SessionInfo
+
+```{r}
+sessionInfo()
+```
+
