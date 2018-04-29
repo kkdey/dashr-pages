@@ -5,7 +5,7 @@ output:
     toc: false
 ---
 
-We consider examples of smoothing using Beta adaptive shrinkage. 
+We consider examples of shrinking and smoothing using Dirichlet Adaptive shrinkage. 
 
 * **Modeling framework of dash - shrinkage and smoothing** : [script](modeling_framework.html)
 * **CTCF Chip-Exo and Chip-seq data smoothing**
