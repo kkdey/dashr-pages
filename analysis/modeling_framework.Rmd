@@ -17,7 +17,8 @@ where \(c_{n+}\) is the total frequency of the different constituents of the com
 
 $$ p_{nl} >= 0 \hspace {1 cm} \sum_{l=1}^{L} p_{nl} = 1 $$
 
-We choose the Dirichlet prior distribution on the compositional probability vector \((p_{n1}, p_{n2}, \cdots, p_{nL})\). In order to perform adaptive shrinkage, we assume a mixture of known Dirichlet priors, each having mean to be the background mean probability vector \( \mu_{1}, \mu_{2}, \cdots, \mu_{L} \), but with varying amounts of concentration, which need to be estimated along with the unknown mixture proportions from the data. 
+We choose the Dirichlet prior distribution on the compositional probability vector \((p_{n1}, p_{n2}, \cdots, p_{nL})\). In order to perform adaptive shrinkage
+$\left(\mu_{1}, \mu_{2}, \cdots, \mu_{L} \right)$, but with varying amounts of concentration, which need to be estimated along with the unknown mixture proportions from the data. 
 
 $$\left ( p_{n1}, p_{n2}, \cdots, p_{nL} \right ) : = \sum_{k=1}^{K} \pi_{k} Dir \left (\alpha_{k} \mu_{1}, \alpha_{k} \mu_{2}, \cdots, \alpha_{k} \mu_{L} \right ) \hspace {0.5 cm} \alpha_{k} > 0 \hspace{0.5 cm} \sum_{l=1}^{L} \mu_{l} = 1 
 $$
@@ -28,9 +29,9 @@ $$ f(\pi) : = \prod_{k=1}^{K} {\pi_{k}}^{\lambda_{k}-1}  $$
 
 ### Default parameters
 
-We choose a default set of \(\alpha_{k}\) to be \((Inf, 100, 50, 20, 10, 2, 1, 0.1, 0.01)\). In this case \(\alpha_{k}=Inf\) corresponds essentially to point mass at the prior mean or background mean \( \mu_{1}, \mu_{2}, \cdots, \mu_{L} \), and then the subsequent choices of \(\alpha_{k}\) have lower degree of concentration. $\alpha_{k} = 1$ corresponds to the most uniform scenario, whereas \(\alpha_{k} < 1\) correspond to cases with probability masses at the edges of the simplex but with the mean at the prior mean. The latter components would direct the points close to the corners towards the corners and away from the center, resulting in clearer separation of the points closer to the mean with the ones away from it.
+We choose a default set of \(\alpha_{k}\) to be \((Inf, 100, 50, 20, 10, 2, 1, 0.1, 0.01)\). In this case \(\alpha_{k}=Inf\) corresponds essentially to point mass at the prior mean or background mean \(\mu_{1}, \mu_{2}, \cdots, \mu_{L}\), and then the subsequent choices of \(\alpha_{k}\) have lower degree of concentration. $\alpha_{k} = 1$ corresponds to the most uniform scenario, whereas \(\alpha_{k} < 1\) correspond to cases with probability masses at the edges of the simplex but with the mean at the prior mean. The latter components would direct the points close to the corners towards the corners and away from the center, resulting in clearer separation of the points closer to the mean with the ones away from it.
 
-We choose the default prior amount of shrinkage of \(\pi_{k}\), namely \(\lambda_{k}\) to be \(\left( 1, 1, 1, 1, \cdots, 1 \right )\). The user may want to increase the weight on the first term (corresponding to \( \alpha_{k} = Inf \)  ) to enforce stronger shrinkage. 
+We choose the default prior amount of shrinkage of \(\pi_{k}\), namely \(\lambda_{k}\) to be \(\left( 1, 1, 1, 1, \cdots, 1 \right )\). The user may want to increase the weight on the first term (corresponding to \(\alpha_{k} = Inf \)  ) to enforce stronger shrinkage. 
 
 ## Adaptive smoothing using *dash*  (*dash-m*)
 
