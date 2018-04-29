@@ -1,0 +1,259 @@
+---
+title: '*dash-smooth* and *smash-poisson* Comparisons'
+author: "Kushal K Dey"
+date: "4/28/2018"
+output: html_document
+---
+
+
+## Introduction
+
+In this script, we present a few simulation studies to compare the *dash-m* 
+(adaptive smoothing using *dash*) and Poisson adaptive smoothing due to 
+SMASH (*smashr::smash.poiss*). 
+
+```{r}
+library(dashr)
+library(smashr)
+```
+
+
+## Example 1 - Poisson with no added noise 
+
+```{r, warning = FALSE, message = FALSE,  fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+mu <- c(rep(10, 100), rep(20, 100), rep(30, 100), rep(10, 100))
+x <- sapply(mu, function(x) rpois(1,x))
+
+out <- dashr::dash_smooth(x, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(x)
+
+plot(x, col = "gray80")
+lines(mu, col = "black", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+## Example 2 - Poisson with low added noise
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+mu <- c(rep(10, 100), rep(20, 100), rep(30, 100), rep(10, 100))
+x <- (mu + rnorm(400, 0, 0.1))
+y <- sapply(x, function(x) return(rpois(1,x)))
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80")
+lines(mu, col = "black", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+## Example 3 -  Poisson GLM model with low noise 
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=13, fig.height=12}
+mu <- c(rep(1, 100), rep(2, 100), rep(3, 100), rep(1, 100))
+x <- (mu + rnorm(400, 0, 0.01))
+y <- sapply(x, function(x) return(rpois(1,exp(x))))
+
+out <- dashr::dash_smooth(y, reflect = TRUE)
+
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80")
+lines(exp(mu), col = "black", lwd = 4)
+lines(out$estimate, col = "red", lwd = 4)
+lines(smash_out, col = "blue")
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+
+## Example 4 - A region with consistent high signal 
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+mu <- c(rep(0, 100), rep(3, 30), rep(0, 100), rep(0, 100))
+epsilon <- c(rep(0, 100), rnorm(30, 0, 0.01), rep(0, 100), rep(0, 100))
+x <- (mu + epsilon)
+y <- sapply(x, function(x) return(rpois(1,x)))
+ids <- sample(1:length(y), 100, replace = FALSE)
+ids <- setdiff(ids, 101:130)
+y[ids] <- y[ids] + 1
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80", type = "h")
+lines(mu, col = "black", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+
+## Example 4 - A region with inconsistent high signal (interspersed with 0s)
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+mu <- c(rep(0, 100), rep(3, 30), rep(0, 100), rep(0, 100))
+epsilon <- rep(0, 330)
+ids <- sample(101:130, 10, replace = FALSE)
+x = mu + epsilon
+y <- sapply(x, function(l) return(rpois(1,l)))
+y[ids] = 0
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80", type = "h")
+lines(mu, col = "black", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+
+## Example 5 - A region with inconsistent high signal (interspersed with 1 values)
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+mu <- c(rep(0, 100), rep(3, 30), rep(0, 100), rep(0, 100))
+epsilon <- rep(0, 330)
+ids <- sample(101:130, 10, replace = FALSE)
+x = mu + epsilon
+y <- sapply(x, function(l) return(rpois(1,l)))
+y[ids] = 0
+y[101:130] = y[101:130] + 1
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80", type = "h")
+lines(mu, col = "black", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+
+## Example 6 - Polynomial curve   + low noise
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+t = seq(-1, 1, length.out = 300)
+mu <- 1*t^3 -  2*t + 1
+epsilon <- rnorm(300, 0, 0.1)
+x = mu + epsilon
+y <- sapply(x, function(l) return(rpois(1,exp(l))))
+
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80", type = "h")
+lines(mu, col = "black", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+
+## Example 7 - Polynomial curve  + high noise
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+t = seq(-1, 1, length.out = 300)
+mu <- 1*t^3 -  2*t + 1
+epsilon <- rnorm(300, 0, 1)
+x = mu + epsilon
+y <- sapply(x, function(l) return(rpois(1,exp(l))))
+
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80", type = "h")
+lines(mu, col = "black", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+## Constant high signal interspersed with 0s
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+y <- rep(3, 300)
+ids <- sample(1:300, 100, replace = FALSE)
+y[ids] <- 0
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80", type = "h")
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```
+
+## Constant high signal interspersed with 1s
+
+```{r, warning = FALSE, message = FALSE, fig.align = "left", fig.show="asis", dpi=144, fig.width=6, fig.height=6}
+y <- rep(5, 300)
+ids <- sample(1:300, 100, replace = FALSE)
+y[ids] <- 1
+
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(y)
+
+plot(y, col = "gray80", type = "h")
+lines(out$estimate, col = "red", lwd = 2)
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c("black","red", "blue"))
+```

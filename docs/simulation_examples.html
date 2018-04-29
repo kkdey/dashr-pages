@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Kushal K Dey" />
+
+
+<title>dash-smooth and smash-poisson Comparisons</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">dashr-pages</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jdblischak/workflowr">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore"><em>dash-smooth</em> and <em>smash-poisson</em> Comparisons</h1>
+<h4 class="author"><em>Kushal K Dey</em></h4>
+<h4 class="date"><em>4/28/2018</em></h4>
+
+</div>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>In this script, we present a few simulation studies to compare the <em>dash-m</em> (adaptive smoothing using <em>dash</em>) and Poisson adaptive smoothing due to SMASH (<em>smashr::smash.poiss</em>).</p>
+<pre class="r"><code>library(dashr)</code></pre>
+<pre><code>## Loading required package: Rcpp</code></pre>
+<pre><code>## Loading required package: inline</code></pre>
+<pre><code>## 
+## Attaching package: &#39;inline&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:Rcpp&#39;:
+## 
+##     registerPlugin</code></pre>
+<pre class="r"><code>library(smashr)</code></pre>
+<pre><code>## Loading required package: ashr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;ashr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dashr&#39;:
+## 
+##     mixEM, w_mixEM</code></pre>
+<pre><code>## Loading required package: wavethresh</code></pre>
+<pre><code>## Loading required package: MASS</code></pre>
+<pre><code>## WaveThresh: R wavelet software, release 4.6.8, installed</code></pre>
+<pre><code>## Copyright Guy Nason and others 1993-2016</code></pre>
+<pre><code>## Note: nlevels has been renamed to nlevelsWT</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## Loading required package: data.table</code></pre>
+<pre><code>## Loading required package: caTools</code></pre>
+</div>
+<div id="example-1---poisson-with-no-added-noise" class="section level2">
+<h2>Example 1 - Poisson with no added noise</h2>
+<pre class="r"><code>mu &lt;- c(rep(10, 100), rep(20, 100), rep(30, 100), rep(10, 100))
+x &lt;- sapply(mu, function(x) rpois(1,x))
+
+out &lt;- dashr::dash_smooth(x, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(x)
+
+plot(x, col = &quot;gray80&quot;)
+lines(mu, col = &quot;black&quot;, lwd = 2)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-2-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="example-2---poisson-with-low-added-noise" class="section level2">
+<h2>Example 2 - Poisson with low added noise</h2>
+<pre class="r"><code>mu &lt;- c(rep(10, 100), rep(20, 100), rep(30, 100), rep(10, 100))
+x &lt;- (mu + rnorm(400, 0, 0.1))
+y &lt;- sapply(x, function(x) return(rpois(1,x)))
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;)
+lines(mu, col = &quot;black&quot;, lwd = 2)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-3-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="example-3---poisson-glm-model-with-low-noise" class="section level2">
+<h2>Example 3 - Poisson GLM model with low noise</h2>
+<pre class="r"><code>mu &lt;- c(rep(1, 100), rep(2, 100), rep(3, 100), rep(1, 100))
+x &lt;- (mu + rnorm(400, 0, 0.01))
+y &lt;- sapply(x, function(x) return(rpois(1,exp(x))))
+
+out &lt;- dashr::dash_smooth(y, reflect = TRUE)</code></pre>
+<pre><code>## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=======                                                          |  11%
+  |                                                                       
+  |==============                                                   |  22%
+  |                                                                       
+  |======================                                           |  33%
+  |                                                                       
+  |=============================                                    |  44%
+  |                                                                       
+  |====================================                             |  56%
+  |                                                                       
+  |===========================================                      |  67%
+  |                                                                       
+  |===================================================              |  78%
+  |                                                                       
+  |==========================================================       |  89%
+  |                                                                       
+  |=================================================================| 100%</code></pre>
+<pre class="r"><code>smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;)
+lines(exp(mu), col = &quot;black&quot;, lwd = 4)
+lines(out$estimate, col = &quot;red&quot;, lwd = 4)
+lines(smash_out, col = &quot;blue&quot;)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-4-1.png" width="1872" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="example-4---a-region-with-consistent-high-signal" class="section level2">
+<h2>Example 4 - A region with consistent high signal</h2>
+<pre class="r"><code>mu &lt;- c(rep(0, 100), rep(3, 30), rep(0, 100), rep(0, 100))
+epsilon &lt;- c(rep(0, 100), rnorm(30, 0, 0.01), rep(0, 100), rep(0, 100))
+x &lt;- (mu + epsilon)
+y &lt;- sapply(x, function(x) return(rpois(1,x)))
+ids &lt;- sample(1:length(y), 100, replace = FALSE)
+ids &lt;- setdiff(ids, 101:130)
+y[ids] &lt;- y[ids] + 1
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;, type = &quot;h&quot;)
+lines(mu, col = &quot;black&quot;, lwd = 2)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-5-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="example-4---a-region-with-inconsistent-high-signal-interspersed-with-0s" class="section level2">
+<h2>Example 4 - A region with inconsistent high signal (interspersed with 0s)</h2>
+<pre class="r"><code>mu &lt;- c(rep(0, 100), rep(3, 30), rep(0, 100), rep(0, 100))
+epsilon &lt;- rep(0, 330)
+ids &lt;- sample(101:130, 10, replace = FALSE)
+x = mu + epsilon
+y &lt;- sapply(x, function(l) return(rpois(1,l)))
+y[ids] = 0
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;, type = &quot;h&quot;)
+lines(mu, col = &quot;black&quot;, lwd = 2)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-6-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="example-5---a-region-with-inconsistent-high-signal-interspersed-with-1-values" class="section level2">
+<h2>Example 5 - A region with inconsistent high signal (interspersed with 1 values)</h2>
+<pre class="r"><code>mu &lt;- c(rep(0, 100), rep(3, 30), rep(0, 100), rep(0, 100))
+epsilon &lt;- rep(0, 330)
+ids &lt;- sample(101:130, 10, replace = FALSE)
+x = mu + epsilon
+y &lt;- sapply(x, function(l) return(rpois(1,l)))
+y[ids] = 0
+y[101:130] = y[101:130] + 1
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;, type = &quot;h&quot;)
+lines(mu, col = &quot;black&quot;, lwd = 2)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="example-6---polynomial-curve-low-noise" class="section level2">
+<h2>Example 6 - Polynomial curve + low noise</h2>
+<pre class="r"><code>t = seq(-1, 1, length.out = 300)
+mu &lt;- 1*t^3 -  2*t + 1
+epsilon &lt;- rnorm(300, 0, 0.1)
+x = mu + epsilon
+y &lt;- sapply(x, function(l) return(rpois(1,exp(l))))
+
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;, type = &quot;h&quot;)
+lines(mu, col = &quot;black&quot;, lwd = 2)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="example-7---polynomial-curve-high-noise" class="section level2">
+<h2>Example 7 - Polynomial curve + high noise</h2>
+<pre class="r"><code>t = seq(-1, 1, length.out = 300)
+mu &lt;- 1*t^3 -  2*t + 1
+epsilon &lt;- rnorm(300, 0, 1)
+x = mu + epsilon
+y &lt;- sapply(x, function(l) return(rpois(1,exp(l))))
+
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;, type = &quot;h&quot;)
+lines(mu, col = &quot;black&quot;, lwd = 2)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-9-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="constant-high-signal-interspersed-with-0s" class="section level2">
+<h2>Constant high signal interspersed with 0s</h2>
+<pre class="r"><code>y &lt;- rep(3, 300)
+ids &lt;- sample(1:300, 100, replace = FALSE)
+y[ids] &lt;- 0
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;, type = &quot;h&quot;)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-10-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+<div id="constant-high-signal-interspersed-with-1s" class="section level2">
+<h2>Constant high signal interspersed with 1s</h2>
+<pre class="r"><code>y &lt;- rep(5, 300)
+ids &lt;- sample(1:300, 100, replace = FALSE)
+y[ids] &lt;- 1
+
+out &lt;- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out &lt;- smashr::smash.poiss(y)
+
+plot(y, col = &quot;gray80&quot;, type = &quot;h&quot;)
+lines(out$estimate, col = &quot;red&quot;, lwd = 2)
+lines(smash_out, col = &quot;blue&quot;, lwd = 2)
+legend(&quot;topright&quot;, # places a legend at the appropriate place
+       c(&quot;truth&quot;,&quot;dash-m&quot;, &quot;smash&quot;), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1.5,1.5),
+       cex = 1.5,
+       col=c(&quot;black&quot;,&quot;red&quot;, &quot;blue&quot;))</code></pre>
+<p><img src="simulation_examples_files/figure-html/unnamed-chunk-11-1.png" width="864" style="display: block; margin: auto auto auto 0;" /></p>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+    This <a href="http://rmarkdown.rstudio.com">R Markdown</a> site was created with <a href="https://github.com/jdblischak/workflowr">workflowr</a>
+</p>
+<hr>
+
+<!-- To enable disqus, uncomment the section below and provide your disqus_shortname -->
+
+<!-- disqus
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'rmarkdown'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+-->
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
