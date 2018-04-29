@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Kushal K Dey" />
+
+
+<title>Modeling framework - Dirichlet Adaptive shrinkage and smoothing</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">dashr-pages</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jdblischak/workflowr">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Modeling framework - Dirichlet Adaptive shrinkage and smoothing</h1>
+<h4 class="author"><em>Kushal K Dey</em></h4>
+<h4 class="date"><em>4/28/2018</em></h4>
+
+</div>
+
+
+<div id="dirichlet-adaptive-shrinkage-dash" class="section level2">
+<h2>Dirichlet Adaptive Shrinkage (<em>dash</em>)</h2>
+<p>Assume that there are <span class="math inline">\(L\)</span> constituents in the compositional mix. <span class="math inline">\(L\)</span> equals <span class="math inline">\(4\)</span> (corresponding to A,C, G and T bases) for the DNa sequence motif data and <span class="math inline">\(20\)</span> corresponding to the amino acids for the protein sequence data.</p>
+<p>Suppose there are <span class="math inline">\(L\)</span> categories and <span class="math inline">\(n\)</span> positions. We model these compositional counts vectors as follows</p>
+<p><span class="math display">\[ (c_{n1}, c_{n2}, \cdots, c_{nL}) \sim Mult \left ( c_{n+} : p_{n1}, p_{n2}, \cdots, p_{nL} \right ) \]</span></p>
+<p>where <span class="math inline">\(c_{n+}\)</span> is the total frequency of the different constituents of the compositional data observed for the <span class="math inline">\(n\)</span> th base. <span class="math inline">\(p_{nl}\)</span> here represents the compositional probability for the <span class="math inline">\(l\)</span> th base in the position <span class="math inline">\(n\)</span>. We have</p>
+<p><span class="math display">\[ p_{nl} &gt;= 0 \hspace {1 cm} \sum_{l=1}^{L} p_{nl} = 1 \]</span></p>
+<p>We choose the Dirichlet prior distribution on the compositional probability vector <span class="math inline">\((p_{n1}, p_{n2}, \cdots, p_{nL})\)</span>. In order to perform adaptive shrinkage, we assume a mixture of known Dirichlet priors, each having mean to be the background mean probability vector ( <em>{1}, </em>{2}, , _{L} ), but with varying amounts of concentration, which need to be estimated along with the unknown mixture proportions from the data.</p>
+<p><span class="math display">\[\left ( p_{n1}, p_{n2}, \cdots, p_{nL} \right ) : = \sum_{k=1}^{K} \pi_{k} Dir \left (\alpha_{k} \mu_{1}, \alpha_{k} \mu_{2}, \cdots, \alpha_{k} \mu_{L} \right ) \hspace {0.5 cm} \alpha_{k} &gt; 0 \hspace{0.5 cm} \sum_{l=1}^{L} \mu_{l} = 1 
+\]</span></p>
+<p>We assume a prior of <span class="math inline">\(\pi_{k}\)</span> to be Dirichlet</p>
+<p><span class="math display">\[ f(\pi) : = \prod_{k=1}^{K} {\pi_{k}}^{\lambda_{k}-1}  \]</span></p>
+<div id="default-parameters" class="section level3">
+<h3>Default parameters</h3>
+<p>We choose a default set of <span class="math inline">\(\alpha_{k}\)</span> to be <span class="math inline">\((Inf, 100, 50, 20, 10, 2, 1, 0.1, 0.01)\)</span>. In this case <span class="math inline">\(\alpha_{k}=Inf\)</span> corresponds essentially to point mass at the prior mean or background mean ( <em>{1}, </em>{2}, , _{L} ), and then the subsequent choices of <span class="math inline">\(\alpha_{k}\)</span> have lower degree of concentration. <span class="math inline">\(\alpha_{k} = 1\)</span> corresponds to the most uniform scenario, whereas <span class="math inline">\(\alpha_{k} &lt; 1\)</span> correspond to cases with probability masses at the edges of the simplex but with the mean at the prior mean. The latter components would direct the points close to the corners towards the corners and away from the center, resulting in clearer separation of the points closer to the mean with the ones away from it.</p>
+<p>We choose the default prior amount of shrinkage of <span class="math inline">\(\pi_{k}\)</span>, namely <span class="math inline">\(\lambda_{k}\)</span> to be <span class="math inline">\(\left( 1, 1, 1, 1, \cdots, 1 \right )\)</span>. The user may want to increase the weight on the first term (corresponding to ( _{k} = Inf ) ) to enforce stronger shrinkage.</p>
+</div>
+</div>
+<div id="adaptive-smoothing-using-dash-dash-m" class="section level2">
+<h2>Adaptive smoothing using <em>dash</em> (<em>dash-m</em>)</h2>
+<p>Consider a process</p>
+<p><span class="math display">\[  Y_t \overset{iid}{\sim} Poi \left ( \mu_t  \right )  \]</span></p>
+<p>where <span class="math inline">\(t=1, 2, , \cdots T\)</span> be a sequence of base positions (analogous to time). Suppose we are interested in estimating <span class="math inline">\(\mu\)</span>. We assume that the function <span class="math inline">\(\mu\)</span> is smooth across time and the noise distribution is Poisson around <span class="math inline">\(\mu\)</span>. Once can then apply Poisson multiscale models to estimate the <span class="math inline">\(\mu\)</span>.</p>
+<p>We have</p>
+<p><span class="math display">\[  Y_1 + Y_2 \sim Poi \left ( \mu_1 + \mu_2  \right ) \]</span></p>
+<p><span class="math display">\[  Y_1 | Y_1 + Y_2 \sim Bin \left (Y_1 + Y_2, \frac{\mu_1}{\mu_1 + \mu_2} \right )\]</span></p>
+<p>We introduce the notation <span class="math inline">\(v_{i:j}\)</span> to denote for a vector <span class="math inline">\(v\)</span>, the sum <span class="math inline">\(\sum_{t=i}^{j} v_{t}\)</span>. for <span class="math inline">\(T=4\)</span>, using the new notation, we can write</p>
+<p><span class="math display">\[ Y_{1:2} \sim Poi \left ( \mu_{1:2}  \right ) \]</span></p>
+<p><span class="math display">\[ Y_{1:4} \sim Poi \left ( \mu_{1:4} \right ) \]</span></p>
+<p><span class="math display">\[  Y_{1} | Y_{1:2} \sim Bin \left ( Y_{1:2}, \frac{\mu_{1}}{\mu_{1:2}} \right ) \]</span></p>
+<p><span class="math display">\[  Y_{3} | Y_{3:4} \sim Bin \left ( Y_{3:4}, \frac{\mu_{3}}{\mu_{3:4}} \right ) \]</span></p>
+<p><span class="math display">\[ Y_{1:2} | Y_{1:4} \sim Bin \left ( Y_{1:4}, \frac{\mu_{1:2}}{\mu_{1:4}} \right ) \]</span></p>
+<p>Together these models are independent decomposition of the <span class="math inline">\(Y_j \sim Poi (\mu_j)\)</span> process. This decomposition also creates an analog set of parameters corresponding to <span class="math inline">\(\mu = (\mu_1, \mu_2, \mu_3, \mu_4)\)</span> in the form of <span class="math inline">\(p = (p_1, p_2, p_3) = ( \mu_{1} / \mu_{1:2}, \mu_{3} / \mu_{3:4}, \mu_{1:2} / \mu_{1:4})\)</span> and the total intensity <span class="math inline">\(\mu_{1:4}\)</span>.</p>
+<p>The vector of parameters <span class="math inline">\(p\)</span> can be treated as the proportional message flow along the multiscale tree on the counts data, and in our model, are treated as independently generated quantities from a mixture of Beta distributions. We assume a separate prior for separate level of the Polya or multiresolution tree. For <span class="math inline">\(T=4\)</span>, there are two levels, the lower level <span class="math inline">\(l=2\)</span> corresponding to <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_2\)</span> and the upper level <span class="math inline">\(l=1\)</span>, with <span class="math inline">\(p_3\)</span>.</p>
+<p><span class="math display">\[  p_{1}, p_{2} = (p^{(2)}_{1}, p^{(2)}_{2}) \sim \sum_{k=1}^{K} \pi_{1k} Beta (\alpha_{k}, \alpha_{k}) \]</span> <span class="math display">\[  p_{3} = p^{(1)}_{1} \sim \sum_{k=1}^{K} \pi_{2k} Beta (\alpha_{k}, \alpha_{k}) \]</span></p>
+<p>The <span class="math inline">\(\alpha_{k}\)</span> concentration values are fixed a priori and we estimate the parameters <span class="math inline">\(\pi_{1.}\)</span> and <span class="math inline">\(\pi_{2.}\)</span>.</p>
+<p>The above example was for <span class="math inline">\(T=2^2\)</span> which resulted in 3 parameters of <span class="math inline">\(p\)</span> to estimate. In case when <span class="math inline">\(T= 2^L\)</span>, we have <span class="math inline">\(T-1\)</span> parameter values of <span class="math inline">\(p\)</span> to estimate. These <span class="math inline">\(p\)</span> values can be decomposed into <span class="math inline">\(L\)</span> resolution levels like we had 2 resolution level in the above example. Then for the <span class="math inline">\(l\)</span>th resolution level, we have</p>
+<p><span class="math display">\[ (p^{(l)}_{1},  p^{(l)}_{2}, \cdots, p^{(l)}_{2^{l-1}}) \sim \sum_{k=1}^{K} \pi_{lk} Beta (\alpha_{k}, \alpha_{k}) \]</span></p>
+<p>We for a fully data driven smoothing, we assume a uniform prior on <span class="math inline">\(\pi\)</span></p>
+<p><span class="math display">\[ \left (\pi_{l1}, \pi_{l2}, \cdots, \pi_{lK} \right) \sim Dir \left(1, 1, \cdots, 1 \right ) \]</span></p>
+<p>Again we take the default <span class="math inline">\(\alpha_k\)</span> to be <span class="math inline">\(\left(Inf, 100, 50, 20, 10, 2, 1, 0.005 \right)\)</span>. The <span class="math inline">\(0.005\)</span> concentration is taken to push the proportions to the edges if they are very different, whereas Inf concentration would correspond to a point mass function in standard shrinkage models. We provide the flexibility to remove the Inf and/or the <span class="math inline">\(&lt;1\)</span> concentrations. The background mean of the Beta prior is always 0.5, pushing consecutive points towards each other, but the level of shrinkage is determined by the weights on the different concentration Beta components.</p>
+<p>In practical implementation, we usually create a TI table to expand the number of message flow proportions at each level.</p>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+    This <a href="http://rmarkdown.rstudio.com">R Markdown</a> site was created with <a href="https://github.com/jdblischak/workflowr">workflowr</a>
+</p>
+<hr>
+
+<!-- To enable disqus, uncomment the section below and provide your disqus_shortname -->
+
+<!-- disqus
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'rmarkdown'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+-->
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
