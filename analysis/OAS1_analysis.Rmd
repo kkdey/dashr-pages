@@ -1,0 +1,91 @@
+---
+title: 'OAS1 analysis : Poisson smash vs dash-m'
+author: "Kushal K Dey"
+date: "4/29/2018"
+output: html_document
+---
+
+In this script, we compare the performance of the smoothing using Dirichlet
+adaptive shrinkage (dash) model against the Poisson SMASH model. 
+
+```{r}
+library(plotly)
+library(RColorBrewer)
+library(smashr)
+library(dashr)
+library(Matrix)
+```
+
+## Data Preparation
+
+```{r}
+data <- get(load("../data/OAS1.Robj"))
+counts <- data$M$M
+```
+
+```{r}
+plot(counts[1,])
+```
+
+## dash and Poisson SMASH
+
+
+```{r eval= FALSE, echo=TRUE}
+out <- dashr::dash_smooth(counts[1,], dash_control = list(Inf_weight = 1))
+smash_out <- smashr::smash.poiss(counts[1,])
+ll <- list("dash" = out, "smash" = smash_out)
+save(ll, file = "../output/dash_OAS1_sample1.rda")
+```
+
+
+```{r}
+ll <- get(load("../output/dash_OAS1_sample1.rda"))
+par(mfrow = c(1,2))
+plot(counts[1,], col = "gray80", type = "h")
+lines(ll$dash$estimate, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("original","dash-m"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80","blue"))
+
+
+plot(counts[1,], col = "gray80", type = "h")
+lines(ll$smash, col = "red", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("original","smash.poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80","red"))
+
+
+
+```
+
+## plotly dash
+
+```{r}
+table <- data.frame("index" = 1:ncol(counts), 
+                    "before_smooth" =  counts[1,],
+                    "after_smooth" = ll$dash$estimate)
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```
+
+## plotly Poisson SMASH
+
+```{r}
+table <- data.frame("index" = 1:ncol(counts), 
+                    "before_smooth" =  counts[1,],
+                    "after_smooth" = ll$smash)
+plot_ly(table, x = ~index, name = "default") %>% 
+  add_lines(y = ~before_smooth, alpha = 0.3, line = list(color = 'gray')) %>%
+  add_lines(y = ~after_smooth, alpha = 1, color = "red") %>%
+  layout(xaxis = list(title = 'Position on chr5'),
+         yaxis = list(title = 'read counts (smooth/unsmooth)'))
+```

@@ -8,7 +8,10 @@ output:
 We consider examples of shrinking and smoothing using Dirichlet Adaptive shrinkage. 
 
 * **Modeling framework of dash - shrinkage and smoothing** : [script](modeling_framework.html)
-* **Simulation performance - dash smoothing vs smash Poisson smoothing** : [script](simulation_examples.html)
+* **Simulation performance - dash smoothing vs smash Poisson smoothing** 
+      + [different simulation designs](simulation_examples.html)
+      + [simulations with nuggets](dash_smash_nuggets.html)
+* **Application of dash on OAS1** : [script](OAS1_analysis.html)
 * **CTCF Chip-Exo and Chip-seq data smoothing**
       + [*CTCF Chip-exo data*](CTCF_dash_ChipExo.html)
       + [*CTCF Chip-seq data*](CTCF_dash_ChipSeq.html)

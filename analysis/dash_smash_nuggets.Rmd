@@ -1,0 +1,206 @@
+---
+title: 'Dash vs SMASH-Poisson comparison : nugget examples'
+author: "Kushal K Dey"
+date: "4/29/2018"
+output: html_document
+---
+
+We compare between the smoothing using Dirichlet adaptive shrinkage and the
+Poisson SMASH version for simulation examples consisting of nugget effects.
+
+```{r warning = FALSE, message = FALSE}
+library(dashr)
+library(smashr)
+```
+
+
+## Example 1 - Medium oscillating Poisson nugget
+
+### simulation viz
+
+```{r}
+y <- c()
+for(num in 1:20){
+    y <- c(y, rep(1,10), rep(5, 10))
+}
+plot(y, type="l")
+
+lambda <- exp(y + rnorm(400, mean=0, sd = 0.5))
+plot(lambda, type="l")
+
+```
+
+```{r}
+data <- rpois(400, lambda)
+data <- data[!is.na(data)]
+plot(data, type="l")
+length(data)
+```
+
+### dash and smash fits
+
+```{r warning = FALSE, message = FALSE}
+dash_out <- dashr::dash_smooth(data, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(data)
+
+par(mfrow = c(1,2))
+plot(data, col = "gray80")
+lines(dash_out$estimate, col = "red", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80","red", "blue"))
+
+plot(data, col = "gray80")
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80", "blue"))
+
+```
+
+
+## Example 2 - Fast Oscillating Poisson nugget
+
+### simulation viz
+
+```{r}
+y <- c()
+for(num in 1:100){
+    y <- c(y, rep(1,1), rep(5, 1))
+}
+plot(y, type="l")
+
+lambda <- exp(y + rnorm(400, mean=0, sd = 0.5))
+plot(lambda, type="l")
+
+```
+
+```{r}
+data <- rpois(400, lambda)
+data <- data[!is.na(data)]
+plot(data, type="l")
+length(data)
+```
+
+
+### dash and smash fits
+
+```{r warning = FALSE, message = FALSE}
+dash_out <- dashr::dash_smooth(data, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(data)
+
+par(mfrow = c(1,2))
+plot(data, col = "gray80")
+lines(dash_out$estimate, col = "red", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80","red", "blue"))
+
+plot(data, col = "gray80")
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80", "blue"))
+
+```
+
+
+
+## Example 3 - constant trend Poisson nugget
+
+### simulation viz
+
+```{r}
+y <- rep(3,300)
+plot(y, type="l")
+lambda <- exp(y + rnorm(300, 0, sd = 0.005))
+plot(lambda, type="l")
+
+data <- rpois(300, lambda)
+data <- data + 1
+plot(data, type="l")
+```
+
+### dash and smash fits
+
+```{r warning = FALSE, message = FALSE}
+dash_out <- dashr::dash_smooth(data, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(data)
+
+par(mfrow = c(1,2))
+plot(data, col = "gray80")
+lines(dash_out$estimate, col = "red", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80","red", "blue"))
+
+plot(data, col = "gray80")
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80", "blue"))
+
+```
+
+## Example 4 - step trend Poisson nugget
+
+### simulation viz
+
+```{r}
+y <- c(rep(3,100), rep(5, 100), rep(6, 100), rep(3, 100), rep(4,100), rep(6, 100))
+plot(y, type="l")
+
+lambda <- exp(y + rnorm(600, 0, sd = 0.05))
+plot(lambda, type="l")
+
+data <- rpois(600, lambda)
+plot(data, type="l")
+```
+
+
+### dash and smash fits
+
+```{r warning = FALSE, message = FALSE}
+dash_out <- dashr::dash_smooth(data, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+smash_out <- smashr::smash.poiss(data)
+
+par(mfrow = c(1,2))
+plot(data, col = "gray80")
+lines(dash_out$estimate, col = "red", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80","red", "blue"))
+
+plot(data, col = "gray80")
+lines(smash_out, col = "blue", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth", "smash"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(1,1),
+       cex = 1,
+       col=c("gray80", "blue"))
+
+
+```
+

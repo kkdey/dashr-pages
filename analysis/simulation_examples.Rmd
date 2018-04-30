@@ -244,7 +244,7 @@ y <- rep(5, 300)
 ids <- sample(1:300, 100, replace = FALSE)
 y[ids] <- 1
 
-out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+out <- dashr::dash_smooth(y, dash_control = list(Inf_weight = 1, add_corner = TRUE), progressbar = FALSE)
 smash_out <- smashr::smash.poiss(y)
 
 plot(y, col = "gray80", type = "h")
@@ -257,3 +257,5 @@ legend("topright", # places a legend at the appropriate place
        cex = 1.5,
        col=c("black","red", "blue"))
 ```
+
+
