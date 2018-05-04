@@ -16,6 +16,7 @@ We consider examples of shrinking and smoothing using Dirichlet Adaptive shrinka
       + [*CTCF Chip-exo data*](CTCF_dash_ChipExo.html)
       + [*CTCF Chip-seq data*](CTCF_dash_ChipSeq.html)
       + [*Results from CTCF applying dash with stronger priors*](dash_shrinkage_levels.html)
+      + [*dash smoothing on combined CTCF signal across replicates*](dash_consolidated_CTCF.html)
 
 
 

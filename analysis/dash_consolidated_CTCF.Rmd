@@ -1,0 +1,199 @@
+---
+title: "dash-smooth on consolidated CTCF"
+author: "Kushal K Dey"
+date: "5/4/2018"
+output: html_document
+---
+
+## Introduction
+
+We apply the `dashr-smooth` function on example CTCF Chip-Exo and Chip-seq data,
+combined across multiple replicates, collected by Kevin Luo,
+the data are stored under `/project/mstephens/data_smoothing/chipseq/examples` and `/project/mstephens/data_smoothing/chipexo/examples` on Midway cluster.
+
+```{r warning=FALSE, message = FALSE}
+library(dashr)
+library(smashr)
+```
+
+## Processing
+
+```{r}
+extract_counts_CTCF <- function(filename){
+  bed_counts <- read.table(filename, header = F, stringsAsFactors = F)
+  colnames(bed_counts) <- c("chr", "start", "end", "name", "width", "counts")
+
+  counts <- strsplit(bed_counts$counts, split = ",")[[1]]
+  counts[counts == "NA"] <- 0
+  counts <- as.numeric(counts)
+
+  return(counts.l = list(chr = bed_counts$chr, start = bed_counts$start, end = bed_counts$end, counts = counts))
+}
+```
+
+## EncodeBroadHistoneHelas
+
+### Forward strand
+
+```{r message=FALSE, warning=FALSE}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep1_forward_counts.txt")
+chipexo2 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep2_forward_counts.txt")
+
+counts1 <- chipexo1$counts
+counts2 <- chipexo2$counts
+counts_pool <- counts1 + counts2
+
+out <- dashr::dash_smooth(counts_pool, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+out2 <- smashr::smash.poiss(counts_pool)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "EncodeBroadHistoneHelas - forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+### Reverse strand
+
+```{r message=FALSE, warning=FALSE}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep1_reverse_counts.txt")
+chipexo2 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeBroadHistoneHelas3CtcfStdAlnRep2_reverse_counts.txt")
+
+counts1 <- chipexo1$counts
+counts2 <- chipexo2$counts
+counts_pool <- counts1 + counts2
+
+out <- dashr::dash_smooth(counts_pool, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+out2 <- smashr::smash.poiss(counts_pool)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "EncodeBroadHistoneHelas-reverse")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+
+## EncodeOpenChromChipHelas
+
+### Forward strand
+
+```{r message=FALSE, warning=FALSE}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep1_forward_counts.txt")
+chipexo2 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep2_forward_counts.txt")
+
+counts1 <- chipexo1$counts
+counts2 <- chipexo2$counts
+counts_pool <- counts1 + counts2
+
+out <- dashr::dash_smooth(counts_pool, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+out2 <- smashr::smash.poiss(counts_pool)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "EncodeOpenChromChipHelas - forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+
+
+### Reverse strand
+
+```{r message=FALSE, warning=FALSE}
+chipexo1 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep1_reverse_counts.txt")
+chipexo2 <- extract_counts_CTCF("../data/chipexo_examples/example_CTCF_MACE_wgEncodeOpenChromChipHelas3CtcfAlnRep2_reverse_counts.txt")
+
+counts1 <- chipexo1$counts
+counts2 <- chipexo2$counts
+counts_pool <- counts1 + counts2
+
+out <- dashr::dash_smooth(counts_pool, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+out2 <- smashr::smash.poiss(counts_pool)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "EncodeOpenChromChipHelas - reverse")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 4)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+## ChipExo
+
+### Forward strand
+
+```{r message=FALSE, warning=FALSE}
+chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep1_Forward_counts.txt")
+chipexo2 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep2_Forward_counts.txt")
+chipexo3 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep3_Forward_counts.txt")
+
+counts1 <- chipexo1$counts
+counts2 <- chipexo2$counts
+counts3 <- chipexo3$counts
+
+counts_pool <- counts1 + counts2 + counts3
+
+
+out <- dashr::dash_smooth(counts_pool, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+out2 <- smashr::smash.poiss(counts_pool)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "ChipExo - forward")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
+### Reverse strand
+
+```{r message=FALSE, warning=FALSE}
+chipexo1 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep1_Reverse_counts.txt")
+chipexo2 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep2_Reverse_counts.txt")
+chipexo3 <- extract_counts_CTCF("../data/chipseq_examples/example_CTCF_raw_rep3_Reverse_counts.txt")
+
+counts1 <- chipexo1$counts
+counts2 <- chipexo2$counts
+counts3 <- chipexo3$counts
+
+counts_pool <- counts1 + counts2 + counts3
+
+out <- dashr::dash_smooth(counts_pool, dash_control = list(Inf_weight = 1), progressbar = FALSE)
+out2 <- smashr::smash.poiss(counts_pool)
+
+plot(chipexo1$counts, col = "gray80", type = "h", ylab = "rep1 forward", xlab = "", main = "ChipExo - reverse")
+lines(out2, col = "blue", lwd = 2)
+lines(out$estimate, col = "red", lwd = 2)
+legend("topright", # places a legend at the appropriate place
+       c("truth","dash-m", "smash-poiss"), # puts text in the legend
+       lty=c(1,1), # gives the legend appropriate symbols (lines)
+       lwd=c(2.5,2.5),
+       cex = 0.5,
+       col=c("gray80","red", "blue"))
+
+```
+
